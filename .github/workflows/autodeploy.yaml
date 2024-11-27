@@ -57,5 +57,6 @@ jobs:
             docker pull ${{ secrets.DOCKER_USER }}/web-app:latest
             docker stop web-app || true
             docker rm web-app || true
+            sudo fuser -k -n tcp 8080 || true
             docker run -d -p 8080:8080 --name web-app ${{ secrets.DOCKER_USER }}/web-app:latest
 
