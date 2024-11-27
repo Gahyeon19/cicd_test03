@@ -19,7 +19,7 @@ jobs:
           java-version: 17 # java 버전 설정
           distribution: 'temurin' # java 배포판 설정
 
-      - name: application build # gradle 로 빌드하기
+      - name: application build # gradle로 빌드하기
         run: |
           chmod +x ./gradlew
           ./gradlew clean build
