@@ -65,14 +65,11 @@ jobs:
             docker stop web-app || true
             docker rm web-app || true
             sudo fuser -k -n tcp 8080 || true
-<<<<<<< HEAD
             # 새로운 컨테이너 실행
             docker run -d -p 8080:8080 --name web-app --network=mynet \
             -e MY_DATA_SOURCE=${{ secrets.DATA_SOURCE }} \
             -e MY_DATA_USERNAME=${{ secrets.DATA_USER }} \
             -e MY_DATA_PASSWORD=${{ secrets.DATA_PWD }} \
             ${{ secrets.DOCKER_USER }}/web-app:latest
-=======
             docker run -d -p 8080:8080 --name web-app ${{ secrets.DOCKER_USER }}/web-app:latest
->>>>>>> 73d8e2170878a005fd17dcbd818d31bf3330780a
 
