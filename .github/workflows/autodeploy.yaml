@@ -8,6 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      MY_DATA_SOURCE: ${{ secrets.DATA_SOURCE }}
+      MY_DATA_USERNAME: ${{ secrets.DATA_USER }}
+      MY_DATA_PASSWORD: ${{ secrets.DATA_PWD }}
 
     steps:  # 저장소에서 코드 가져오기
       - name: source code checkout
@@ -18,6 +22,10 @@ jobs:
         with:
           java-version: 17 # java 버전 설정
           distribution: 'temurin' # java 배포판 설정
+
+#      - name: application.yaml 파일 생성하기
+#        run:
+#          echo "${{ secrets.APPLICATION_YAML }}" > src/main/resources/application.yaml
 
       - name: application build # gradle로 빌드하기
         run: |
@@ -48,14 +56,19 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
-          # dockerhub 에 토큰을 가지고 로그인
-          # docker 이미지 풀
-          # 기존 컨테이너 중지 & 삭제
-          # 새로운 컨테이너 실행
           script: |
+            # dockerhub 에 토큰을 가지고 로그인
             echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+            # docker 이미지 풀
             docker pull ${{ secrets.DOCKER_USER }}/web-app:latest
+            # 기존 컨테이너 중지 & 삭제
             docker stop web-app || true
             docker rm web-app || true
-            docker run -d -p 8080:8080 --name web-app ${{ secrets.DOCKER_USER }}/web-app:latest
+            sudo fuser -k -n tcp 8080 || true
+            # 새로운 컨테이너 실행
+            docker run -d -p 8080:8080 --name web-app --network=mynet \
+            -e MY_DATA_SOURCE=${{ secrets.DATA_SOURCE }} \
+            -e MY_DATA_USERNAME=${{ secrets.DATA_USER }} \
+            -e MY_DATA_PASSWORD=${{ secrets.DATA_PWD }} \
+            ${{ secrets.DOCKER_USER }}/web-app:latest
 
