@@ -53,7 +53,7 @@ jobs:
           # 기존 컨테이너 중지 & 삭제
           # 새로운 컨테이너 실행
           script: |
-            echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+            echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
             docker pull ${{ secrets.DOCKER_USER }}/web-app:latest
             docker stop web-app || true
             docker rm web-app || true
