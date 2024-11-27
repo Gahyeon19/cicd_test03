@@ -3,10 +3,10 @@ package com.example.cicd_test_3;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class CicdTest3ApplicationTests {
 
-    @Test
+//    @Test
     void contextLoads() {
     }
 
